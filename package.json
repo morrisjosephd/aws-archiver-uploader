@@ -1,0 +1,25 @@
+{
+  "name": "aws-archiver-and-uploader",
+  "version": "0.0.1",
+  "description": "AWS photo archiver and uploader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/morrisjosephd/aws-archiver-uploader.git"
+  },
+  "keywords": [
+    "nodejs",
+    "aws",
+    "javascript",
+    "express"
+  ],
+  "author": "Joseph Morris <morris.josephd@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/morrisjosephd/aws-archiver-uploader/issues"
+  },
+  "homepage": "https://github.com/morrisjosephd/aws-archiver-uploader#readme"
+}
