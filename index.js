@@ -5,8 +5,9 @@ var fs = require('fs');
 var program = require('commander');
 var archiver = require('archiver');
 var request = require('request');
+require('dotevn').load();
 
-var path = '/Users/josephmorris/';
+var path = process.env.LOCAL_PATH;
 
 program
     //.usage('<dirctory>')
@@ -23,9 +24,6 @@ var filesInDirectory = fs.readdirSync(localDirectory);
 var fileCount = filesInDirectory.length;
 console.log('Number of files to archive: ' + fileCount);
 
-
-
-//var output = fs.createWriteStream(__dirname + '/example-output.zip');
 var output = fs.createWriteStream(path + 'Desktop/archiver/testArchive.zip');
 var archive = archiver.create('zip', {});
 
