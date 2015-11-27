@@ -26,5 +26,6 @@
     "archiver": "^0.17.0",
     "commander": "^2.9.0",
     "request": "^2.67.0"
-  }
+  },
+  "bin": {"awsArchiver": "index.js"}
 }
