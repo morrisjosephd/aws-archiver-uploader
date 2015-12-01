@@ -5,10 +5,10 @@ var fs = require('fs');
 var program = require('commander');
 var archiver = require('archiver');
 var request = require('request');
-var aws = require('./aws.js');
-require('dotevn').load();
+var aws = require('./aws');
+//require('dotenv').load();
 
-var path = process.env.LOCAL_PATH;
+//var path = process.env.LOCAL_PATH;
 
 program
     //.usage('<dirctory>')
@@ -19,13 +19,13 @@ if (!program.localDirectory) {
   program.help();
 }
 
-var localDirectory = path + program.localDirectory;
+var localDirectory = '/Users/josephmorris/' + program.localDirectory;
 
 var filesInDirectory = fs.readdirSync(localDirectory);
 var fileCount = filesInDirectory.length;
 console.log('Number of files to archive: ' + fileCount);
 
-var output = fs.createWriteStream(path + 'Desktop/archiver/testArchive.zip');
+var output = fs.createWriteStream('/Users/josephmorris/' + 'Desktop/archiver/testArchive.zip');
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
@@ -33,6 +33,7 @@ output.on('close', function() {
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log(megabytes + ': total megabytes in archive');
   console.log('archive created and the output file has closed.');
+  aws.createBucket('testBucket');
 });
 
 archive.on('error', function(error) {
