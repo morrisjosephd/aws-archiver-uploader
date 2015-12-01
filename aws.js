@@ -1,6 +1,7 @@
 var aws = require('aws-sdk');
+require('dotenv').load();
 
-aws.config.loadFromPath('/Users/josephmorris/Projects/aws-archiver-uploader/AwsConfig.json');
+//aws.config.loadFromPath('/Users/josephmorris/Projects/aws-archiver-uploader/AwsConfig.json');
 
 var s3 = new aws.S3();
 
