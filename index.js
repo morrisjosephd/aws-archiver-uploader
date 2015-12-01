@@ -13,19 +13,21 @@ var aws = require('./aws');
 program
     //.usage('<dirctory>')
     .option('-l, --localDirectory [directory]', 'Local directory name to zip')
+    .option('-b, --bucketName [bucketName]', 'Name of bucket to create on S3')
     .parse(process.argv);
 
-if (!program.localDirectory) {
+if (!program.localDirectory || !program.bucketName) {
   program.help();
 }
 
-var localDirectory = '/Users/josephmorris/' + program.localDirectory;
+var localDirectory = program.localDirectory;
+var bucketName = program.bucketName;
 
 var filesInDirectory = fs.readdirSync(localDirectory);
 var fileCount = filesInDirectory.length;
 console.log('Number of files to archive: ' + fileCount);
 
-var output = fs.createWriteStream('/Users/josephmorris/' + 'Desktop/archiver/testArchive.zip');
+var output = fs.createWriteStream('/Users/josephmorris/' + 'Desktop/pdf/testArchive.zip');
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
@@ -33,7 +35,7 @@ output.on('close', function() {
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log(megabytes + ': total megabytes in archive');
   console.log('archive created and the output file has closed.');
-  aws.createBucket('testBucket');
+  aws.createBucket(bucketName);
 });
 
 archive.on('error', function(error) {
@@ -43,7 +45,7 @@ archive.on('error', function(error) {
 archive.pipe(output);
 
 archive.bulk([
-  { expand: true, cwd: localDirectory, src: ['*.NEF', '*.tif', '*.jpg'] }
+  { expand: true, cwd: localDirectory, src: ['*.NEF', '*.tif', '*.jpg', '*.pdf'] }
 ]);
 
 archive.finalize();
