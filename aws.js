@@ -1,9 +1,9 @@
 var aws = require('aws-sdk');
 require('dotenv').load();
 
-//aws.config.loadFromPath('/Users/josephmorris/Projects/aws-archiver-uploader/AwsConfig.json');
+var s3Credentials = {accessKeyId : process.env.ACCESS_KEY_ID, secretAccessKey: process.env.SECRET_ACCESS_KEY};
 
-var s3 = new aws.S3();
+var s3 = new aws.S3(s3Credentials);
 
 exports.createBucket = function(bucketName) {
   s3.createBucket({Bucket: bucketName}, function(err) {
@@ -17,7 +17,7 @@ exports.createBucket = function(bucketName) {
   });
 };
 
-var listAllBuckets = function() {
+function listAllBuckets() {
   s3.listBuckets(function(err, data) {
     if (err) {
       console.log('Error: ' + err);

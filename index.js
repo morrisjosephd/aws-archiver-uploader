@@ -1,14 +1,10 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
-
 var program = require('commander');
 var archiver = require('archiver');
 var request = require('request');
 var aws = require('./aws');
-//require('dotenv').load();
-
-//var path = process.env.LOCAL_PATH;
 
 program
     //.usage('<dirctory>')
