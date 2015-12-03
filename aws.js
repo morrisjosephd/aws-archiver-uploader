@@ -1,7 +1,7 @@
 var aws = require('aws-sdk');
 require('dotenv').load();
 
-var s3Credentials = {accessKeyId : process.env.ACCESS_KEY_ID, secretAccessKey: process.env.SECRET_ACCESS_KEY};
+var s3Credentials = {accessKeyId : process.env.S3_ACCESS_KEY_ID, secretAccessKey: process.env.S3_SECRET_ACCESS_KEY};
 
 var s3 = new aws.S3(s3Credentials);
 
@@ -12,12 +12,12 @@ exports.createBucket = function(bucketName) {
     } else {
       console.log('created the bucket[' + bucketName + ']');
       console.log(arguments);
-      listAllBuckets();
+      //listAllBuckets();
     }
   });
 };
 
-function listAllBuckets() {
+exports.listAllBuckets =  function() {
   s3.listBuckets(function(err, data) {
     if (err) {
       console.log('Error: ' + err);
