@@ -34,6 +34,7 @@ var fileCount = filesInDirectory.length;
 console.log('Number of files to archive: ' + fileCount);
 
 var output = fs.createWriteStream(localPath + zipName);
+var upload = localPath +zipName;
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
@@ -41,7 +42,8 @@ output.on('close', function() {
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log(megabytes + ': total megabytes in archive');
   console.log('archive created and the output file has closed.');
-  //aws.createBucket(bucketName);
+  aws.createBucket(bucketName);
+  aws.uploadFiles(fs.createReadStream(upload), zipName);
   aws.listAllBuckets();
 });
 
