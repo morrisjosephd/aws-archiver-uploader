@@ -48,8 +48,9 @@ output.on('close', function() {
 });
 
 archive.on('error', function(error) {
-  console.log('Archive on error: ' + error);
+  console.log('Archiving error: ' + error);
   throw err;
+	process.exit(1):
 });
 
 archive.pipe(output);
