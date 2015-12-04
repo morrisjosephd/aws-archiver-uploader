@@ -17,8 +17,6 @@ if (!program.localDirectory || !program.bucketName) {
   program.help();
 }
 
-
-var localPath = process.env.MAC_LAPTOP;
 var localDirectory = program.localDirectory;
 var bucketName = program.bucketName;
 var zipName;
@@ -26,31 +24,32 @@ var zipName;
 if (program.zipName) {
   zipName = program.zipName;
 } else {
-  createZipFileName();
+  zipName = createZipFileName();
 }
 
 var filesInDirectory = fs.readdirSync(localDirectory);
 var fileCount = filesInDirectory.length;
 console.log('Number of files to archive: ' + fileCount);
 
-var output = fs.createWriteStream(localPath + zipName);
-var upload = localPath +zipName;
+var output = fs.createWriteStream(localDirectory + zipName);
+var upload = fs.createReadStream(localDirectory + zipName);
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
   var bytesToMegabytes = 1048576;
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
-  console.log(megabytes + ': total megabytes in archive');
   console.log('archive created and the output file has closed.');
+  console.log(megabytes + ': total megabytes in archive');
+  //aws.process(bucketName, upload, zipName);
   aws.createBucket(bucketName);
-  aws.uploadFiles(fs.createReadStream(upload), zipName);
+  aws.uploadFiles(upload, zipName);
   aws.listAllBuckets();
 });
 
 archive.on('error', function(error) {
   console.log('Archiving error: ' + error);
   throw err;
-	process.exit(1):
+	process.exit(1);
 });
 
 archive.pipe(output);
@@ -64,6 +63,5 @@ archive.finalize();
 function createZipFileName() {
   var d = new Date();
   var today = (d.getMonth() + 1) + '_' + d.getDate() + '_' + d.getFullYear();
-  zipName = 'temporaryArchive_' + today;
-  console.log('Archive file to create: ' + zipName);
+  return 'temporaryArchive_' + today;
 }
