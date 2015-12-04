@@ -6,7 +6,11 @@ var params = {accessKeyId : process.env.S3_ACCESS_KEY_ID, secretAccessKey: proce
 
 var s3 = new aws.S3(params);
 
-exports.createBucket = function(bucketName, upload) {
+exports.process = function(bucketName, upload, zipName) {
+
+};
+
+function createBucket(bucketName, upload) {
   params.Bucket = bucketName;
   s3.createBucket({Bucket: bucketName}, function(err) {
     if (err) {
@@ -18,7 +22,7 @@ exports.createBucket = function(bucketName, upload) {
   });
 };
 
-exports.uploadFiles = function(upload, fileName) {
+function uploadFiles(upload, fileName) {
   params.Body = upload;
   params.Key = fileName + '.zip';
   s3.upload(params)
@@ -32,7 +36,7 @@ exports.uploadFiles = function(upload, fileName) {
       });
 };
 
-exports.listAllBuckets =  function() {
+function listAllBuckets() {
   s3.listBuckets(function(err, data) {
     if (err) {
       console.log('Error: ' + err);
