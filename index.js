@@ -40,10 +40,7 @@ output.on('close', function() {
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log('archive created and the output file has closed.');
   console.log(megabytes + ': total megabytes in archive');
-  //aws.process(bucketName, upload, zipName);
-  aws.createBucket(bucketName);
-  aws.uploadFiles(upload, zipName);
-  aws.listAllBuckets();
+  aws.process(bucketName, upload, zipName);
 });
 
 archive.on('error', function(error) {

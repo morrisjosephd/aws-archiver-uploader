@@ -7,22 +7,26 @@ var params = {accessKeyId : process.env.S3_ACCESS_KEY_ID, secretAccessKey: proce
 var s3 = new aws.S3(params);
 
 exports.process = function(bucketName, upload, zipName) {
-
+  var cb = uploadFiles(upload, zipName);
+  createBucket(bucketName, cb);
+  listAllBuckets();
 };
 
-function createBucket(bucketName, upload) {
+function createBucket(bucketName, cb) {
   params.Bucket = bucketName;
-  s3.createBucket({Bucket: bucketName}, function(err) {
+  s3.createBucket({Bucket: bucketName}, function(err, data) {
     if (err) {
-      console.log('Error: ' + err);
+      console.log('Error creating bucket ' + '[' + bucketName + ']' + ': ' + err);
     } else {
-      console.log('created the bucket[' + bucketName + ']');
-      console.log(arguments);
+      var bucketCreated = data.Location.replace(/^\/+/, "");
+      console.log('Bucket created: ' + bucketCreated);
+      cb();
     }
   });
-};
+}
 
 function uploadFiles(upload, fileName) {
+  return function() {
   params.Body = upload;
   params.Key = fileName + '.zip';
   s3.upload(params)
@@ -34,7 +38,8 @@ function uploadFiles(upload, fileName) {
         }
         console.log('Upload data: ' + data);
       });
-};
+  };
+}
 
 function listAllBuckets() {
   s3.listBuckets(function(err, data) {
@@ -47,4 +52,4 @@ function listAllBuckets() {
       }
     }
   });
-};
+}
