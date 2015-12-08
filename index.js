@@ -3,7 +3,7 @@
 var fs = require('fs');
 var program = require('commander');
 var archiver = require('archiver');
-var aws = require('./aws');
+var aws = require('./awsPromise');
 require('dotenv').load();
 
 program
