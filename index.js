@@ -4,7 +4,6 @@ var fs = require('fs');
 var program = require('commander');
 var archiver = require('archiver');
 var aws = require('./aws');
-require('dotenv').load();
 
 program
     //.usage('<dirctory>')
@@ -18,7 +17,6 @@ if (!program.localDirectory || !program.bucketName) {
 }
 
 var localDirectory = program.localDirectory;
-var bucketName = program.bucketName;
 var zipName;
 
 if (program.zipName) {
@@ -27,20 +25,20 @@ if (program.zipName) {
   zipName = createZipFileName();
 }
 
-var filesInDirectory = fs.readdirSync(localDirectory);
-var fileCount = filesInDirectory.length;
+var fileCount = (fs.readdirSync(localDirectory).filter(function(file){ return file.charAt(0) != '.' })).length;
 console.log('Number of files to archive: ' + fileCount);
 
-var output = fs.createWriteStream(localDirectory + zipName);
-var upload = fs.createReadStream(localDirectory + zipName);
+var zipFileLocation = localDirectory + zipName;
+var output = fs.createWriteStream(zipFileLocation);
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
+  var bucketName = program.bucketName;
   var bytesToMegabytes = 1048576;
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log('archive created and the output file has closed.');
   console.log(megabytes + ': total megabytes in archive');
-  aws.process(bucketName, upload, zipName);
+  aws.process(bucketName, zipFileLocation, zipName);
 });
 
 archive.on('error', function(error) {
@@ -60,5 +58,5 @@ archive.finalize();
 function createZipFileName() {
   var d = new Date();
   var today = (d.getMonth() + 1) + '_' + d.getDate() + '_' + d.getFullYear();
-  return 'temporaryArchive_' + today;
+  return 'temporaryArchive_' + today + '.zip';
 }
