@@ -25,7 +25,7 @@ if (program.zipName) {
   zipName = createZipFileName();
 }
 
-var fileCount = fs._readdir(localDirectory).length;
+var fileCount = (fs.readdirSync(localDirectory).filter(function(file){ return file.charAt(0) != '.' })).length;
 console.log('Number of files to archive: ' + fileCount);
 
 var zipFileLocation = localDirectory + zipName;

@@ -7,7 +7,6 @@ var params = {accessKeyId : process.env.S3_ACCESS_KEY_ID, secretAccessKey: proce
 var s3 = new aws.S3(params);
 
 exports.process = function(bucketName, fileLocation, fileName) {
-  var fileToUpload = fs.createReadStream(fileLocation);
   createBucket(bucketName)
       .then(function(data) {
         var bucketCreated = data.Location.replace(/^\/+/, "");
@@ -39,8 +38,8 @@ function uploadFiles(fileLocation, fileName) {
   params.Key = fileName;
 
   s3.upload(params)
-      .on('httpUploadProgress', function(evt) {
-        console.log(evt);})
+      //.on('httpUploadProgress', function(evt) {
+      //  console.log(evt);})
       .send(function(err, data) {
         if(err) {
           console.log('Upload error: ' + err);
