@@ -17,7 +17,6 @@ if (!program.localDirectory || !program.bucketName) {
 }
 
 var localDirectory = program.localDirectory;
-var bucketName = program.bucketName;
 var zipName;
 
 if (program.zipName) {
@@ -26,8 +25,7 @@ if (program.zipName) {
   zipName = createZipFileName();
 }
 
-var filesInDirectory = fs.readdirSync(localDirectory);
-var fileCount = filesInDirectory.length;
+var fileCount = fs._readdir(localDirectory).length;
 console.log('Number of files to archive: ' + fileCount);
 
 var zipFileLocation = localDirectory + zipName;
@@ -35,6 +33,7 @@ var output = fs.createWriteStream(zipFileLocation);
 var archive = archiver.create('zip', {});
 
 output.on('close', function() {
+  var bucketName = program.bucketName;
   var bytesToMegabytes = 1048576;
   var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
   console.log('archive created and the output file has closed.');

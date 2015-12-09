@@ -12,7 +12,7 @@ exports.process = function(bucketName, fileLocation, fileName) {
       .then(function(data) {
         var bucketCreated = data.Location.replace(/^\/+/, "");
         console.log('Bucket created: ' + bucketCreated);
-        uploadFiles(fileToUpload, fileName);
+        uploadFiles(fileLocation, fileName);
       })
       .catch(function(err) {
         console.log('The promise threw an error: ' + err);
@@ -33,7 +33,9 @@ function createBucket(bucketName) {
 }
 
 function uploadFiles(fileLocation, fileName) {
-  params.Body = fileLocation;
+  var fileToUpload = fs.createReadStream(fileLocation);
+
+  params.Body = fileToUpload;
   params.Key = fileName;
 
   s3.upload(params)
@@ -60,3 +62,4 @@ function listAllBuckets() {
     }
   });
 }
+
