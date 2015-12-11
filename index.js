@@ -7,6 +7,7 @@ var aws = require('./aws');
 
 program
     //.usage('<dirctory>')
+    .option('-o, listObjects [listObjects]', 'List all files in a bucket')
     .option('-l, --localDirectory [directory]', 'Local directory name to zip')
     .option('-b, --bucketName [bucketName]', 'Name of bucket to create on S3')
     .option('-z, --zipName [zipName]', 'Name of zip to create')
