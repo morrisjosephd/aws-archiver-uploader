@@ -35,10 +35,8 @@ var archive = archiver.create('zip', {});
 
 output.on('close', function() {
   var bucketName = program.bucketName;
-  var bytesToMegabytes = 1048576;
-  var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
-  console.log('archive created and the output file has closed.');
-  console.log(megabytes + ': total megabytes in archive');
+
+  printArchiveInfo();
   aws.process(bucketName, zipFileLocation, zipName);
 });
 
@@ -60,4 +58,11 @@ function createZipFileName() {
   var d = new Date();
   var today = (d.getMonth() + 1) + '_' + d.getDate() + '_' + d.getFullYear();
   return 'temporaryArchive_' + today + '.zip';
+}
+
+function printArchiveInfo() {
+  var bytesToMegabytes = 1048576;
+  var megabytes = (archive.pointer() / bytesToMegabytes).toFixed(2);
+  console.log('archive created and the output file has closed.');
+  console.log(megabytes + ': total megabytes in archive');
 }
